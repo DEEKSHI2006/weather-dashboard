@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #eef2f3;
+            color: #333;
+        }
+
+        header {
+            background: #2196F3;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar input {
+            padding: 0.7rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+            flex: 1;
+        }
+
+        .search-bar button {
+            padding: 0.7rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+            background: #2196F3;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .search-bar button:hover {
+            background: #1E88E5;
+        }
+
+        .weather {
+            text-align: center;
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .weather h2 {
+            margin: 0.5rem 0;
+        }
+
+        .weather img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .weather p {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #333;
+            color: white;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Weather Dashboard</h1>
+    </header>
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="city" placeholder="Enter city name">
+            <button onclick="getWeather()">Search</button>
+        </div>
+        <div class="weather" id="weather">
+            <h2>Weather Information</h2>
+            <p>Enter a city to get the current weather.</p>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 Weather Dashboard. All rights reserved.</p>
+    </footer>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('city').value;
+            const apiKey = '75d756bab73f1670470fddb041740183';
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.cod === 200) {
+                    document.getElementById('weather').innerHTML = `
+                        <h2>${data.name}, ${data.sys.country}</h2>
+                        <img src="http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="Weather Icon">
+                        <p><strong>Temperature:</strong> ${data.main.temp}&#8451;</p>
+                        <p><strong>Condition:</strong> ${data.weather[0].description}</p>
+                        <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
+                        <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
+                    `;
+                } else {
+                    document.getElementById('weather').innerHTML = `<p>City not found. Please try again.</p>`;
+                }
+            } catch (error) {
+                document.getElementById('weather').innerHTML = `<p>Error fetching weather data. Please try again later.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
